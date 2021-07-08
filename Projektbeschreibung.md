@@ -15,10 +15,10 @@ Das Projekt besteht aus folgenden Java-Klassen:
 [FECpacket](src/FECpacket.java): Erweiterung der RTP-Klasse mit FEC-Funktionalität  
 [FecHandler](src/FecHandler.java): Unterstützung der Fehlerkorrektur mittels FEC  
 [VideoReader](src/VideoReader.java): Einlesen einer MJPEG-Datei auf der Serverseite  
-[JpegFrame](src/JpegFrame): Codierung/Decodierung von JPEG-Bildern gemäß RFC-2435
-[AviMetadataParser](AviMetadataParser.java): Extrahiert Metadaten aus AVI-Dateien
-[CustomLoggingHandler](CustomLoggingHandler.java): Anpassung der Logger-Ausgaben für minimalen Overhead
-[QuickTimeMetadataParser](QuickTimeMetadataParser.java): Extrahiert Metadaten aus Quicktime-Movie-Dateien
+[JpegFrame](src/JpegFrame): Codierung/Decodierung von JPEG-Bildern gemäß RFC-2435  
+[AviMetadataParser](AviMetadataParser.java): Extrahiert Metadaten aus AVI-Dateien  
+[CustomLoggingHandler](CustomLoggingHandler.java): Anpassung der Logger-Ausgaben für minimalen Overhead  
+[QuickTimeMetadataParser](QuickTimeMetadataParser.java): Extrahiert Metadaten aus Quicktime-Movie-Dateien  
 [VideoMetadata](VideoMetadata.java): Video-Metadaten wie Framerate und Abspieldauer
 
 ## 2. Programmstart
