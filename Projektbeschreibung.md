@@ -16,10 +16,10 @@ Das Projekt besteht aus folgenden Java-Klassen:
 [FecHandler](src/FecHandler.java): Unterstützung der Fehlerkorrektur mittels FEC  
 [VideoReader](src/VideoReader.java): Einlesen einer MJPEG-Datei auf der Serverseite  
 [JpegFrame](src/JpegFrame): Codierung/Decodierung von JPEG-Bildern gemäß RFC-2435  
-[AviMetadataParser](AviMetadataParser.java): Extrahiert Metadaten aus AVI-Dateien  
-[CustomLoggingHandler](CustomLoggingHandler.java): Anpassung der Logger-Ausgaben für minimalen Overhead  
-[QuickTimeMetadataParser](QuickTimeMetadataParser.java): Extrahiert Metadaten aus Quicktime-Movie-Dateien  
-[VideoMetadata](VideoMetadata.java): Video-Metadaten wie Framerate und Abspieldauer
+[AviMetadataParser](src/AviMetadataParser.java): Extrahiert Metadaten aus AVI-Dateien  
+[CustomLoggingHandler](src/CustomLoggingHandler.java): Anpassung der Logger-Ausgaben für minimalen Overhead  
+[QuickTimeMetadataParser](src/QuickTimeMetadataParser.java): Extrahiert Metadaten aus Quicktime-Movie-Dateien  
+[VideoMetadata](src/VideoMetadata.java): Video-Metadaten wie Framerate und Abspieldauer
 
 ## 2. Programmstart
 Der Start des Servers erfolgt mittels `java Server RTSP-Port`. Der Standard-RTSP-Port ist 554, da Sie aber im Praktikum einen Port > 1024 nutzen müssen, bietet sich der alternative Port 8554 an. Der Start des Clients erfolgt mittels `java Client server_name server_port video_file`. Am Client können RTSP-Kommandos angefordert werden. 
