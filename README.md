@@ -7,4 +7,5 @@ Folgende Dokumente beschreiben den Beleg:
 * [Aufgabenstellung](Aufgabenstellung.md)
 * [Abgabeformat](Abgabeformat.md)
 * [Git/GitHub-Nutzung](git.md)
- 
+
+
