@@ -229,11 +229,14 @@ public class Client {
           // TASK construct a new DatagramSocket to receive server RTP packets on port RTP_RCV_PORT
           RTPsocket = new DatagramSocket();
 
+
+
           // for now FEC packets are received via RTP-Port, so keep comment below
           // FECsocket = new DatagramSocket(FEC_RCV_PORT);
 
           // TASK set Timeout value of the socket to 1 ms
-          // ....
+          int timeout=1;
+          RTPsocket.setSoTimeout(timeout);
           logger.log(Level.FINE, "Socket receive buffer: " + RTPsocket.getReceiveBufferSize());
 
           rtpHandler.setFecDecryptionEnabled(checkBoxFec.isSelected());
@@ -279,7 +282,7 @@ public class Client {
       logger.log(Level.INFO, "Play Button pressed !");
       if (state == READY) {
         // TASK increase RTSP sequence number
-        // .....
+        RTSPSeqNb++;
 
         // Send PLAY message to the server
         send_RTSP_request("PLAY");
@@ -308,7 +311,7 @@ public class Client {
       logger.log(Level.INFO, "Pause Button pressed !");
       if (state == PLAYING) {
         // TASK increase RTSP sequence number
-        // ....
+        RTSPSeqNb++;
 
         // Send PAUSE message to the server
         send_RTSP_request("PAUSE");
@@ -338,7 +341,7 @@ public class Client {
 
       logger.log(Level.INFO, "Teardown Button pressed !");
       // TASK increase RTSP sequence number
-
+      RTSPSeqNb++;
       // Send TEARDOWN message to the server
       send_RTSP_request("TEARDOWN");
 
