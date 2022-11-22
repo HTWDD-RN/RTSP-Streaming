@@ -3,6 +3,8 @@ Client
 usage: java Client [Server hostname] [Server RTSP listening port] [Video file requested]
 ---------------------- */
 
+import com.sun.source.util.TaskEvent;
+
 import java.io.*;
 import java.net.*;
 import java.text.DecimalFormat;
@@ -265,12 +267,19 @@ public class Client {
         if (parse_server_response() != 200) {
           logger.log(Level.WARNING, "Invalid Server Response");
         } else {
+            send_RTSP_request("SETUP");
+
           // TASK change RTSP state and print new state to console and statusLabel
           // state = ....
+          state = 1;
           // statusLabel
+          statusLabel.setText("READY");
+          logger.log(Level.INFO,"New RTSP state: READY\n");
           // logger.log(Level.INFO, "New RTSP state: \n");
         }
-      } // else if state != INIT then do nothing
+      }  else if(state != INIT){
+
+      }
     }
   }
 
@@ -292,8 +301,13 @@ public class Client {
           logger.log(Level.WARNING, "Invalid Server Response");
         }
         else {
+
           //TASK change RTSP state and print out new state to console an statusLabel
           // state = ....
+          state = 2;
+          // statusLabel
+          statusLabel.setText("PLAY");
+          logger.log(Level.INFO,"New RTSP state: PLAY\n");
 
           // start the timer
           timer.start();
@@ -323,6 +337,10 @@ public class Client {
         else {
           // TASK change RTSP state and print out new state to console and statusLabel
           // state = ....
+          state = 1;
+          // statusLabel
+          statusLabel.setText("READY");
+          logger.log(Level.INFO,"New RTSP state: READY\n");
 
           // stop the timer
           timer.stop();
@@ -350,8 +368,12 @@ public class Client {
         logger.log(Level.WARNING, "Invalid Server Response");
       }
       else {
+        state = 0;
         // TASK change RTSP state and print out new state to console and statusLabel
         // state = ....
+        state = 0;
+        statusLabel.setText("INIT");
+        logger.log(Level.INFO,"New RTSP State: INIT\n");
 
         // stop the timer
         timer.stop();
