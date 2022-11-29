@@ -3,17 +3,18 @@ Server
 usage: java Server [RTSP listening port]
 ---------------------- */
 
-import java.io.*;
-import java.net.*;
-import java.awt.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.util.Enumeration;
+import java.util.Random;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server extends JFrame implements ActionListener, ChangeListener {
 
@@ -380,7 +381,7 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
     if (fec) label = " fec ";
     else label = " media ";
     // TASK correct the if-instruction to work properly
-    if (random.nextDouble() > 0.0) {
+    if (random.nextDouble() > lossRate) {
       logger.log(Level.FINE, "Send frame: " + imagenb + label);
       RTPsocket.send(senddp);
     } else {
@@ -517,8 +518,8 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
    */
   //TASK Complete the OPTIONS response
   private String options() {
-    return "....";
-  }
+    return "Public: DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE"+ CRLF;
+  };
 
 
   /** Creates a DESCRIBE response string in SDP format for current media */
@@ -534,8 +535,8 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
     rtspBody.write("...");
     rtspBody.write("...");
 
-    rtspHeader.write("Content-Base: " + "");
-    rtspHeader.write("Content-Type: " + "");
+    rtspHeader.write("Content-Base: " + "localhost 8554 htm.mjepeg"+CRLF);
+    rtspHeader.write("Content-Type: " + "application/sdp"+CRLF);
     rtspHeader.write("Content-Length: " + "");
     rtspHeader.write(CRLF);
 
