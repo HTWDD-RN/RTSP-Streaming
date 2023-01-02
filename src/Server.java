@@ -537,7 +537,7 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
 
     rtspHeader.write("Content-Base: " + "localhost 8554 htm.mjepeg"+CRLF);
     rtspHeader.write("Content-Type: " + "application/sdp"+CRLF);
-    rtspHeader.write("Content-Length: " + "");
+    rtspHeader.write("Content-Length: " + "rtspBody.toString().length()" + CRLF);
     rtspHeader.write(CRLF);
 
     return rtspHeader.toString() + rtspBody.toString();

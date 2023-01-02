@@ -3,19 +3,18 @@ Client
 usage: java Client [Server hostname] [Server RTSP listening port] [Video file requested]
 ---------------------- */
 
-import com.sun.source.util.TaskEvent;
-
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.ListIterator;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.Timer;
 
 public class Client {
   static int videoLength = 2800;
@@ -229,7 +228,7 @@ public class Client {
         // Init non-blocking RTPsocket that will be used to receive data
         try {
           // TASK construct a new DatagramSocket to receive server RTP packets on port RTP_RCV_PORT
-          RTPsocket = new DatagramSocket();
+          RTPsocket = new DatagramSocket(RTP_RCV_PORT);
 
 
 
@@ -271,7 +270,7 @@ public class Client {
 
           // TASK change RTSP state and print new state to console and statusLabel
           // state = ....
-          state = 1;
+          state = READY;
           // statusLabel
           statusLabel.setText("READY");
           logger.log(Level.INFO,"New RTSP state: READY\n");
@@ -304,7 +303,7 @@ public class Client {
 
           //TASK change RTSP state and print out new state to console an statusLabel
           // state = ....
-          state = 2;
+          state = PLAYING;
           // statusLabel
           statusLabel.setText("PLAY");
           logger.log(Level.INFO,"New RTSP state: PLAY\n");
@@ -337,7 +336,7 @@ public class Client {
         else {
           // TASK change RTSP state and print out new state to console and statusLabel
           // state = ....
-          state = 1;
+          state = READY;
           // statusLabel
           statusLabel.setText("READY");
           logger.log(Level.INFO,"New RTSP state: READY\n");
@@ -368,10 +367,9 @@ public class Client {
         logger.log(Level.WARNING, "Invalid Server Response");
       }
       else {
-        state = 0;
         // TASK change RTSP state and print out new state to console and statusLabel
         // state = ....
-        state = 0;
+        state = INIT;
         statusLabel.setText("INIT");
         logger.log(Level.INFO,"New RTSP State: INIT\n");
 
