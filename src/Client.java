@@ -487,23 +487,23 @@ public class Client {
       DecimalFormat df = new DecimalFormat("###.###");
       pufferLabel.setText(
           "Puffer: "
-              + ""  //
+              + (rs.latestSequenceNumber - rs.playbackIndex) + ""
               + " aktuelle Nr. / Summe empf.: "
-              + " / "
+              + rs.latestSequenceNumber + " / " + rs.receivedPackets
               + "");
       statsLabel.setText(
           "<html>Abspielzähler / verlorene Medienpakete // Bilder / verloren: "
               + ""
-              + " / "
+              + rs.playbackIndex + " / " + rs.framesLost
               + ""
               + "<p/>"
               + "</html>");
       fecLabel.setText(
           "FEC: korrigiert / nicht korrigiert: "
               + ""
-              + " / "
+              + rs.correctedPackets +  " / " + rs.notCorrectedPackets
               + ""
-              + "  Ratio: "
+              + "  Ratio: " 
               + "");
     }
   }
