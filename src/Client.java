@@ -48,6 +48,7 @@ public class Client {
   // RTP variables:
   // ----------------
   DatagramSocket RTPsocket; // socket to be used to send and receive UDP packets
+  FecHandler fec;
   //DatagramSocket FECsocket; // socket to be used to send and receive UDP packets for FEC
   private RtpHandler rtpHandler = null;
   static int RTP_RCV_PORT = 25000; // port where the client will receive the RTP packets
@@ -238,6 +239,9 @@ public class Client {
           logger.log(Level.FINE, "Socket receive buffer: " + RTPsocket.getReceiveBufferSize());
 
           rtpHandler.setFecDecryptionEnabled(checkBoxFec.isSelected());
+          
+          // Init the FEC-handler           
+          fec = new FecHandler(checkBoxFec.isSelected());
           // Init the play timer
           int timerDelay = FRAME_RATE; // use default delay
           if (framerate != 0) { // if information available, use that
@@ -467,30 +471,44 @@ public class Client {
     }
 
       //TASK complete the statistics
-    private void setStatistics(ReceptionStatistic rs) {
-      DecimalFormat df = new DecimalFormat("###.###");
-      pufferLabel.setText(
-          "Puffer: "
-              + ""  //
-              + " aktuelle Nr. / Summe empf.: "
-              + " / "
-              + "");
-      statsLabel.setText(
-          "<html>Abspielzähler / verlorene Medienpakete // Bilder / verloren: "
-              + ""
-              + " / "
-              + ""
-              + "<p/>"
-              + "</html>");
-      fecLabel.setText(
-          "FEC: korrigiert / nicht korrigiert: "
-              + ""
-              + " / "
-              + ""
-              + "  Ratio: "
-              + "");
+      private void setStatistics(ReceptionStatistic rs) {
+        DecimalFormat df = new DecimalFormat("###.###");
+        float ratio = 0f;
+        float recoveredPercent = 0f;
+        if (fec.getNrNotCorrected() != 0)
+        {
+          ratio = (float) fec.getNrCorrected() / fec.getNrNotCorrected();
+        }
+  
+        if (fec.getPlayCounter() != 0)
+        {
+          recoveredPercent = ((float) fec.getNrFramesLost() / fec.getPlayCounter()) * 100;
+        }
+  
+        pufferLabel.setText(
+            "Puffer: "
+                + ""  //
+                + " aktuelle Nr. / Summe empf.: "
+                + fec.getSeqNr() + " / " + fec.getNrReceived()
+                + "");
+        statsLabel.setText(
+            "<html>Abspielzähler / verlorene Medienpakete // Bilder / verloren: "
+                + fec.getPlayCounter() + " / " + fec.getNrLost()
+                + " // "
+                + fec.getNrFramesRequested() + " / " + fec.getNrFramesLost()
+                + "<p/>"
+                + "</html>");
+        fecLabel.setText(
+            "FEC: korrigiert / nicht korrigiert: "
+                + fec.getNrCorrected()
+                + " / "
+                + fec.getNrNotCorrected()
+                + "  Ratio: "
+                + df.format(ratio)
+                + "  Restfehler: "
+                + df.format(recoveredPercent) + " %");
+      }
     }
-  }
 
   /**
    * Parse Server Response Handles Session, Public, Content-Base - attribute
