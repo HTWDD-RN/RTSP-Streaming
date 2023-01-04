@@ -208,15 +208,15 @@ public class Client {
     RTSPSeqNb = 1;
   }
 
-  // TASK Complete all button handlers
+  // TASK DONE Complete all button handlers
   /** Handler for the Setup button */
   class setupButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
       Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
+      //+starts by logging the event that the setup button was pressed
       logger.log(Level.INFO, "Setup Button pressed !");
 
-      if (state == INIT) {
+      if (state == INIT) { //if the state is INIT, it checks to see if there is any information on media available
         if (framerate == 0) { // no information on media available
           send_RTSP_request("DESCRIBE");
           if (parse_server_response() != 200) { // block and wait for response
@@ -226,14 +226,15 @@ public class Client {
 
         // Init non-blocking RTPsocket that will be used to receive data
         try {
-          // TASK construct a new DatagramSocket to receive server RTP packets on port RTP_RCV_PORT
-          RTPsocket = new DatagramSocket();
+          // TASK DONE construct a new DatagramSocket to receive server RTP packets on port RTP_RCV_PORT
+          RTPsocket = new DatagramSocket(RTP_RCV_PORT);
 
           // for now FEC packets are received via RTP-Port, so keep comment below
           // FECsocket = new DatagramSocket(FEC_RCV_PORT);
 
-          // TASK set Timeout value of the socket to 1 ms
+          // TASK DONE set Timeout value of the socket to 1 ms
           // ....
+          RTPsocket.setSoTimeout(1);
           logger.log(Level.FINE, "Socket receive buffer: " + RTPsocket.getReceiveBufferSize());
 
           rtpHandler.setFecDecryptionEnabled(checkBoxFec.isSelected());
@@ -262,10 +263,10 @@ public class Client {
         if (parse_server_response() != 200) {
           logger.log(Level.WARNING, "Invalid Server Response");
         } else {
-          // TASK change RTSP state and print new state to console and statusLabel
-          // state = ....
-          // statusLabel
-          // logger.log(Level.INFO, "New RTSP state: \n");
+          // TASK DONE change RTSP state and print new state to console and statusLabel
+          state = READY;
+          statusLabel.setText("READY");
+          logger.log(Level.INFO, "New RTSP state: READY\n");
         }
       } // else if state != INIT then do nothing
     }
@@ -278,9 +279,9 @@ public class Client {
 
       logger.log(Level.INFO, "Play Button pressed !");
       if (state == READY) {
-        // TASK increase RTSP sequence number
+        // TASK DONE increase RTSP sequence number
         // .....
-
+        RTSPSeqNb++;
         // Send PLAY message to the server
         send_RTSP_request("PLAY");
 
@@ -289,8 +290,11 @@ public class Client {
           logger.log(Level.WARNING, "Invalid Server Response");
         }
         else {
-          //TASK change RTSP state and print out new state to console an statusLabel
+          //TASK DONE change RTSP state and print out new state to console an statusLabel
           // state = ....
+          state = PLAYING;
+          statusLabel.setText("PLAY");
+          logger.log(Level.INFO, "New RTSP state: PLAY\n");
 
           // start the timer
           timer.start();
@@ -307,9 +311,8 @@ public class Client {
 
       logger.log(Level.INFO, "Pause Button pressed !");
       if (state == PLAYING) {
-        // TASK increase RTSP sequence number
-        // ....
-
+        // TASK DONE increase RTSP sequence number
+        RTSPSeqNb++;
         // Send PAUSE message to the server
         send_RTSP_request("PAUSE");
 
@@ -318,9 +321,11 @@ public class Client {
           logger.log(Level.WARNING, "Invalid Server Response");
         }
         else {
-          // TASK change RTSP state and print out new state to console and statusLabel
+          // TASK DONE change RTSP state and print out new state to console and statusLabel
           // state = ....
-
+          state = READY;
+          statusLabel.setText("READY");
+          logger.log(Level.INFO, "New RTSP state: READY\n");
           // stop the timer
           timer.stop();
           timerPlay.stop();
@@ -337,8 +342,8 @@ public class Client {
       Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
       logger.log(Level.INFO, "Teardown Button pressed !");
-      // TASK increase RTSP sequence number
-
+      // TASK DONE increase RTSP sequence number
+      RTSPSeqNb++;
       // Send TEARDOWN message to the server
       send_RTSP_request("TEARDOWN");
 
@@ -347,9 +352,11 @@ public class Client {
         logger.log(Level.WARNING, "Invalid Server Response");
       }
       else {
-        // TASK change RTSP state and print out new state to console and statusLabel
+        // TASK DONE change RTSP state and print out new state to console and statusLabel
         // state = ....
-
+        state = INIT;
+        statusLabel.setText("INIT");
+        logger.log(Level.INFO, "New RTSP state: INIT\n");
         // stop the timer
         timer.stop();
         timerPlay.stop();
@@ -601,18 +608,20 @@ public class Client {
       if (request_type.equals("SETUP")) rtsp = rtsp + "/trackID=0";
 
       String rtspReq = "";
-      //TASK Complete the RTSP request method line
+      //TASK DONE Complete the RTSP request method line
       // rtspReq = ....
+      rtspReq = request_type + " " + rtsp+ " RTSP/1.0" + CRLF;
 
-      // TASK write the CSeq line:
+      // TASK DONE write the CSeq line:
       // rtspReq += ....
-
+      rtspReq += "CSeq: " + RTSPSeqNb + CRLF;
       // check if request_type is equal to "SETUP" and in this case write the Transport: line
       // advertising to the server the port used to receive the RTP packets RTP_RCV_PORT
       // otherwise, write the Session line from the RTSPid field
       if (request_type.equals("SETUP")) {
-        //TASK Complete the Transport Attribute
+        //TASK DONE Complete the Transport Attribute
         rtspReq += "Transport:";
+        rtspReq += "Transport: RTP/AVP;unicast;client_port=" + RTP_RCV_PORT +"-"+ RTP_RCV_PORT+1 + CRLF;
       }
 
       // SessionIS if available
