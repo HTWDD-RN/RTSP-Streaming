@@ -379,7 +379,7 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
     String label;
     if (fec) label = " fec ";
     else label = " media ";
-    // TASK correct the if-instruction to work properly
+    // TASK DONE correct the if-instruction to work properly
     if (random.nextDouble() > lossRate) {
       logger.log(Level.FINE, "Send frame: " + imagenb + label);
       RTPsocket.send(senddp);
@@ -515,14 +515,14 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
   /** Creates a OPTIONS response string
    * @return  Options string, starting with: Public: ...
    */
-  //TASK Complete the OPTIONS response
+  //TASK DONE Complete the OPTIONS response
   private String options() {
     return "Public: DESCRIBE,SETUP,TEARDOWN,PLAY,PAUSE" + CRLF;
   }
 
 
   /** Creates a DESCRIBE response string in SDP format for current media */
-  //TASK Complete the DESCRIBE response
+  //TASK DONE Complete the DESCRIBE response
   private String describe() {
     StringWriter rtspHeader = new StringWriter();
     StringWriter rtspBody = new StringWriter();
