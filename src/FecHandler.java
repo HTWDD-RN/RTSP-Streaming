@@ -4,21 +4,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Jörg Vogt
- * @version 1.0
- */
-
-/*
-   Information according to RFC 5109
-   http://apidocs.jitsi.org/libjitsi/
-*/
 
 public class FecHandler {
   RTPpacket rtp;
   FECpacket fec;
 
   // Receiver
+  HashMap<Integer, RTPpacket> rtpStack = new HashMap<>(); // list of media packets
   HashMap<Integer, FECpacket> fecStack = new HashMap<>(); // list of fec packets
   HashMap<Integer, Integer> fecNr = new HashMap<>(); // Snr of corresponding fec packet
   HashMap<Integer, List<Integer>> fecList = new HashMap<>(); // list of involved media packets
@@ -40,7 +32,7 @@ public class FecHandler {
   boolean useFec;
 
   // Error Concealment
-  byte[] lastPayload = {1};
+  byte[] lastPayload = { 1 };
 
   // *** Statistics for media packets ********
   int nrReceived; // count only media at receiver
@@ -64,7 +56,8 @@ public class FecHandler {
     this.useFec = useFec;
   }
 
-  // *************** Sender SET *******************************************************************
+  // *************** Sender SET
+  // *******************************************************************
 
   /**
    * *** Sender *** Saves the involved RTP packets to build the FEC packet
@@ -74,9 +67,8 @@ public class FecHandler {
   public void setRtp(RTPpacket rtp) {
     // init new FEC packet if necessary
     if (fec == null) {
-      fec =
-          new FECpacket(
-              FEC_PT, fecSeqNr, rtp.gettimestamp(), fecGroupSize, rtp.getsequencenumber());
+      fec = new FECpacket(
+          FEC_PT, fecSeqNr, rtp.gettimestamp(), fecGroupSize, rtp.getsequencenumber());
       fec.setUlpLevelHeader(0, 0, fecGroupSize);
     }
 
@@ -119,7 +111,8 @@ public class FecHandler {
     fecGroupSize = size;
   }
 
-  // *************** Receiver PUT *****************************************************************
+  // *************** Receiver PUT
+  // *****************************************************************
 
   /**
    * Handles and store a recieved FEC packet
@@ -130,7 +123,7 @@ public class FecHandler {
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     // build fec from rtp
     fec = new FECpacket(rtp.getpacket(), rtp.getpacket().length);
-    // TASK remove comment for debugging
+    // TASK DONE remove comment for debugging
     // fec.printHeaders();
 
     // stores fec
@@ -144,20 +137,26 @@ public class FecHandler {
 
     // set list to get fec packet nr
     list.forEach((E) -> fecNr.put(E, seqNrFec)); // FEC-packet
-    list.forEach((E) -> fecList.put(E, list));  // list of corresponding RTP packets
+    list.forEach((E) -> fecList.put(E, list)); // list of corresponding RTP packets
   }
 
-  // *************** Receiver GET *****************************************************************
-
-  /**
-   * Checks if the RTP packet is reparable
-   *
-   * @param nr Sequence Nr.
-   * @return true if possible
-   */
+ 
   public boolean checkCorrection(int nr, HashMap<Integer, RTPpacket> mediaPackets) {
-    //TASK complete this method!
-    return false;
+ 
+  
+    if (fecList.get(nr) == null) {
+      return false;
+    }
+    
+    int counter = 0;
+    List<Integer> l = fecList.get(nr);
+    for (Integer i : l) {
+      if (mediaPackets.get(i) != null) {
+        counter++;
+      }
+    }
+
+    return (counter >= l.size() - 1);
   }
 
   /**
@@ -167,7 +166,22 @@ public class FecHandler {
    * @return RTP packet
    */
   public RTPpacket correctRtp(int nr, HashMap<Integer, RTPpacket> mediaPackets) {
-    //TASK complete this method!
+
+ 
+    // involvierten Media-RTPs
+
+    List<Integer> InvoPackete = fecList.get(nr);
+
+    int fnr = fecNr.get(nr);
+    fec = fecStack.get(fnr);
+
+    for (int x : InvoPackete) {
+      if (x != nr) {
+        rtp = mediaPackets.get(x);
+        fec.addRtp(rtp);
+      }
+    }
+
     return fec.getLostRtp(nr);
   }
 
@@ -177,10 +191,12 @@ public class FecHandler {
    * @param nr Media Sequence Nr.
    */
   private void clearStack(int nr) {
-    //TASK complete this method!
+    // TASK DONE complete this method!
+
   }
 
-  // *************** Receiver Statistics ***********************************************************
+  //Receiver Statistics
+
 
   /**
    * @return Latest (highest) received sequence number
@@ -204,7 +220,7 @@ public class FecHandler {
   }
 
   /**
-   * @return  Number of lost media packets (calculated at time of display)
+   * @return Number of lost media packets (calculated at time of display)
    */
   public int getNrLost() {
     return nrLost;
@@ -227,10 +243,14 @@ public class FecHandler {
   /**
    * @return Number of requested but lost Video frames
    */
-  public int getNrFramesLost() { return nrFramesLost; }
+  public int getNrFramesLost() {
+    return nrFramesLost;
+  }
 
   /**
    * @return Number of requested Video frames
    */
-  public int getNrFramesRequested() {  return nrFramesRequested; }
+  public int getNrFramesRequested() {
+    return nrFramesRequested;
+  }
 }
