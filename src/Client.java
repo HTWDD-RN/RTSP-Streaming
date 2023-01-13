@@ -503,7 +503,7 @@ public class Client {
               + ""
               + rs.correctedPackets +  " / " + rs.notCorrectedPackets
               + ""
-              + "  Ratio: " 
+              + "  Ratio: " +  df.format((double)rs.correctedPackets / (rs.packetsLost > 0 ? (double)rs.packetsLost : 1))
               + "");
     }
   }
@@ -626,16 +626,18 @@ public class Client {
       String rtspReq = "";
       //TASK Complete the RTSP request method line
       // rtspReq = ....
+      rtspReq = request_type + " " + rtsp + " RTSP/1.0\n";
 
       // TASK write the CSeq line:
       // rtspReq += ....
+      rtspReq += String.format("CSeq: %s\n",RTSPSeqNb);
 
       // check if request_type is equal to "SETUP" and in this case write the Transport: line
       // advertising to the server the port used to receive the RTP packets RTP_RCV_PORT
       // otherwise, write the Session line from the RTSPid field
       if (request_type.equals("SETUP")) {
         //TASK Complete the Transport Attribute
-        rtspReq += "Transport:";
+        rtspReq += String.format("Transport: RTP/UDP;unicast;client_port=%s%s",RTP_RCV_PORT,CRLF);
       }
 
       // SessionIS if available

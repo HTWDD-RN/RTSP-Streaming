@@ -157,7 +157,21 @@ public class FecHandler {
    */
   public boolean checkCorrection(int nr, HashMap<Integer, RTPpacket> mediaPackets) {
     //TASK complete this method!
-    return false;
+    if (fecStack.get(fecNr.get(nr)) == null) {
+      return false;
+    }
+
+    if (fecList.get(nr) != null) {
+      for (int i = 0; i < fecList.get(nr).size(); i++) {
+        int rtp_package_nr = fecList.get(nr).get(i);
+        if (mediaPackets.get(rtp_package_nr) == null && rtp_package_nr != nr)
+          return false;
+      }
+    } else {
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -168,6 +182,16 @@ public class FecHandler {
    */
   public RTPpacket correctRtp(int nr, HashMap<Integer, RTPpacket> mediaPackets) {
     //TASK complete this method!
+
+    FECpacket fec = fecStack.get(fecNr.get(nr));
+    List<Integer> fecListIndex = fecList.get(nr);
+
+    for (int i = 0; i < fecListIndex.size(); i++) {
+      RTPpacket pack = mediaPackets.get(fecListIndex.get(i));
+      if (pack != null) {
+        fec.addRtp(pack);
+      }
+    }
     return fec.getLostRtp(nr);
   }
 
