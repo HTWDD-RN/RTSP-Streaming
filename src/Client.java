@@ -503,7 +503,7 @@ public class Client {
               + ""
               + rs.correctedPackets +  " / " + rs.notCorrectedPackets
               + ""
-              + "  Ratio: " +  df.format((double)rs.correctedPackets / (rs.packetsLost > 0 ? (double)rs.packetsLost : 1))
+              + "  Ratio: " +  df.format((double)rs.notCorrectedPackets / (rs.packetsLost > 0 ? (double)rs.packetsLost : 1))
               + "");
     }
   }
