@@ -68,7 +68,7 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
   // input and output stream filters
   static BufferedReader RTSPBufferedReader;
   static BufferedWriter RTSPBufferedWriter;
-  static String VideoFileName = "htw.mjpeg"; // video file requested from the client
+  static String VideoFileName = "Kanaren.mjpeg"; // video file requested from the client
   static String VideoDir = "";//"C:/Users/helmi/Documents/Uni/7.Semester/IT/Beleg_IT2/s80528-it2-beleg2/";
   static int RTSP_ID = 123456; // ID of the RTSP session
   int RTSPSeqNb = 0; // Sequence number of RTSP messages within the session
@@ -535,7 +535,7 @@ public class Server extends JFrame implements ActionListener, ChangeListener {
     rtspBody.write("...");
     rtspBody.write("...");
 
-    rtspHeader.write("Content-Base: " + "localhost 8554 htw.mjpeg"+CRLF);
+    rtspHeader.write("Content-Base: " + "localhost 8554 Kanaren.mjpeg"+CRLF);
     rtspHeader.write("Content-Type: " + "application/sdp" +CRLF);
     rtspHeader.write("Content-Length: " + rtspBody.getBuffer().length() + CRLF);
     rtspHeader.write(CRLF);
