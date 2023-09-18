@@ -2,38 +2,27 @@
 Die Aufgaben beziehen sich auf den Beleg Videostreaming für das Modul Internettechnologien 2.
 
 ## Aufgaben
+### 1. RTSP-Protokoll: Client-Methoden
+Programmieren Sie die Klasse Rtsp.java entsprechend der in der Projektbeschreibung und den Kommentaren im Quelltext der abstrakten Klasse gegebenen Hinweisen.
 
-### 1. RTSP-Protokoll im Client
-Ergänzen Sie die Klasse Client entsprechend der in der Projektbeschreibung und den Kommentaren im Quelltext gegebenen Hinweisen. Damit wird das RTSP-Protokoll im Client vervollständigt. Lassen die den Abschnitt zur Statistik zunächst unbearbeitet. Dieser Teil wird in Abschnitt 5 bearbeitet.
-
-### 2. RTSP-Methoden im Server
+### 2. RTSP-Methoden: Server-Methoden
 Ergänzen Sie die RTSP-Methoden OPTIONS und DESCRIBE anhand der Beispiele aus [RFC 2326](https://www.ietf.org/rfc/rfc2326.txt) und [RFC 2327](https://www.ietf.org/rfc/rfc2327.txt). 
 Die Serverantwort muss im Client nicht ausgewertet werden. Die Anzeige der Antwort in der Konsole des Clients genügt.
 
 Es ist ausreichend, sich bei der DESCRIBE-Methode auf das Beispielvideo zu beziehen und die Antwort auf dem Server statisch zu hinterlegen. 
+Ausgewertet werden die u.a. die Parameter framerate und range.
 
-### 3. RTP-Protokoll in Klasse RTPpacket
-Ergänzen Sie die Klasse RTPpacket entsprechend der in der Projektbeschreibung und den Kommentaren im Quelltext gegebenen Hinweisen.
+### 3. RTP-Protokoll
+Programmieren Sie die Klasse RTPpacket entsprechend der Projektbeschreibung und den Kommentaren im Quelltext der abstrakten Klasse gegebenen Hinweisen.
 
-### 4. Simulation von Paketverlusten
-Simulieren Sie Paketverluste und eine variable Verzögerung im Netz, indem Sie am Sender eine wahlweise Unterdrückung von zu sendenden Paketen vornehmen. Diese Unterdrückung von Paketen sollte zufällig und mit einstellbarer Paketverlustwahrscheinlichkeit über das GUI erfolgen. Beispiel: der Wert 0,1 bedeutet, es werden im Mittel 10% der zu übertragenen Pakete unterdrückt. Passen dazu den Quelltext im Server an.
-
-### 5. Anzeige von Statistiken am Client
-Um die simulierten Netzwerkeigenschaften prüfen zu können und die Leistungsfähigkeit der später zu integrierenden Fehlerschutzcodes einschätzen zu können, ist eine Statistikanzeige notwendig.
-Folgende Werte sollten mindestens peridisch am Client angezeigt werden:
-1. Puffergröße
-2. letzte empfangene Sequenznummer
-3. Anzahl erhaltener / verlorener Medienpakete + prozentuale Angabe verlorener Medienpakete
-4. Anzahl korrigierter / unkorrigierbarer Medienpakete + prozentuale Angabe unkorrigierbarer Medienpakete
-5. Abspielzähler (Pakete / Bilder)
-6. verlorene Bilder
+### 4. Auswertung der Fehlerstatistiken ohne Fehlerkorrektur
+Sie können an der GUI des Servers eine Paketfehlerwahrscheinlichkeit einstellen und damit Netzwerkfehler simulieren. Probieren Sie verschiedene Einstellungen aus und betrachten Sie das Ergebnis in der Videoanzeige. 
+Ab welcher Paketfehlerwahrscheinlichkeit wird die Videoanzeige spürbar beeinträchtigt?
 
 Mit dem ersten Punkt kann die Qualität der Verbindung eingeschätzt werden und mit dem zweiten Punkt die Leistungsfähigkeit des FEC-Verfahrens.
 Machen Sie sich Gedanken über weitere zu überwachende Parameter. Die meisten dieser Daten können aus der Klasse ReceptionStatistic entnommen werden. Verifizieren Sie die korrekte Berechnung dieser Werte.
 
-
-### 6. Implementierung des FEC-Schutzes
-
+### 5. Implementierung des FEC-Schutzes
 Implementieren Sie einen FEC-Schutz gemäß [RFC 5109](https://www.ietf.org/rfc/rfc5109.txt).
 Der Server mit FEC-Schutz soll kompatibel zu Clients ohne FEC-Verfahren sein! Nutzen Sie dazu das Feld Payloadtype des RTP-Headers (PT=127 für FEC-Pakete).
 
@@ -43,14 +32,10 @@ Um nicht die komplette FEC-Funktionalität selbst entwickeln zu müssen, werden 
    * Server: Kombination mehrerer Medienpakete zu einem FEC-Paket
    * Client: Jitterpuffer für empfangene Medien- und FEC-Pakete, Bereitstellung des aktuellen Bildinhaltes in Form einer Liste von RTP-Paketen mit gleichem TimeStamp.
 
-
-Die Fehlerkorrektur im FecHandler ist noch zu implementieren. Dazu ist die vorhandene Architektur zu analysieren und die TASK-Abschnitte zu bearbeiten.
-
+Die Fehlerkorrektur im FecHandler ist noch zu implementieren. Dazu ist die vorhandene Architektur zu analysieren und die abstrakten Methoden sind auszuprogrammieren.
 Eine Übersicht über die relevanten Datenstrukturen und ein Beispiel ist hier zu finden [FEC-Diagramme](https://www2.htw-dresden.de/~jvogt/it2/fec-diagramme.html)
 
-
 #### Architektur der Paketverarbeitung
-
 ##### Server
 * der Server steuert die Verarbeitung im vorhandenen Timer-Handler
 * Nutzdaten erstellen und speichern: `RtpHandler.jpegToRtpPacket()`
@@ -102,13 +87,7 @@ Hier einige Tipps für die Fehlersuche:
 * Test der Anzahl verlorener / wiederhergestellter Pakete auf Plausibilität
 
 
-### 7. Test und Dokumentation
-
-#### Video
-Binden Sie ein kurzes (ca. 0,5 - 2 min) Video Ihrer Wahl ein. Eine Umcodierung zu MJPEG kann zum Beispiel mittels FFMPEG oder VLC-Player erfolgen. Eventuell müssen Sie die Auflösung des Videos verringern, damit die Bilder jeweils in ein UDP-Paket passen.  
-
-`ffmpeg -i test.mp4 -vcodec mjpeg -q:v 10 -huffman 0 -r 10 -vf scale=720:-1 -an test.mjpeg`
-
+### 6. Analyse der Leistungsfähigkeit des implementieren FEC-Verfahrens
 #### Parameterwahl
 Finden Sie den optimalen Wert für k bei einer Kanalverlustrate von 10%. Optimal bedeutet in diesem Fall eine subjektiv zufriedenstellende Bildqualität bei geringstmöglicher Redundanz.
 
@@ -116,20 +95,26 @@ Finden Sie den optimalen Wert für k bei einer Kanalverlustrate von 10%. Optimal
 Versuchen Sie, mathematisch die Paketverlustwahrscheinlichkeit (Restfehler) für verschiedene Gruppengrößen (k=2, 3, 5, 10, 20, 48) zu bestimmen.
 Tragen Sie die Ergebnisse in einem Diagramm über der Kanalfehlerwahrscheinlichkeit auf. Sie können hierfür Gnuplot, R oder ein anderes Tool nutzen. Tragen Sie in das Diagramm zusätzlich mit Ihrem Videostreaming praktisch gemessene Fehlerhäufigkeiten auf (k=2 und k=48). Diskutieren Sie eventuelle Unterschiede zum theoretisch ermittelten Ergebnis.
 
+Für diese Aufgabe unterstützt Sie die Statistik am Empfänger mit dem Werten:
+1. aktuelle Puffergröße
+2. letzte empfangene Sequenznummer
+3. Anzahl erhaltener / verlorener Medienpakete + prozentuale Angabe verlorener Medienpakete
+4. Anzahl korrigierter / unkorrigierbarer Medienpakete + prozentuale Angabe unkorrigierbarer Medienpakete
+5. Abspielzähler (Pakete / Bilder)
+6. verlorene Bilder
 
-#### Kompatibilität
+### 7. Kompatibilität des Demoprojektes
 Prüfen Sie die Kompatibilität des Clients und Servers mit dem VLC-Player und versuchen Sie eventuelle Probleme zu analysieren. Bei Problemen mit VLC 3 versuchen Sie VLC 2.2.
 
+### 8. Videoformat 
+Binden Sie ein kurzes (ca. 0,5 - 2 min) Video Ihrer Wahl ein. Eine Umcodierung zu MJPEG kann zum Beispiel mittels FFMPEG oder VLC-Player erfolgen. Eventuell müssen Sie die Auflösung des Videos verringern, damit die Bilder jeweils in ein UDP-Paket passen.
 
-#### Dokumentation
-Im Falle einer eigenen Architektur des FecHandlers ist eine Dokumentation notwendig, ansonsten nicht.
-Beschreiben Sie die Architektur Ihrer Implementierung anhand sinnvoller Softwarebeschreibungsmethoden (Klassendiagramm, Zustandsdiagramm, etc.). Eine Quellcodekommentierung ist dazu nicht ausreichend!
+`ffmpeg -i test.mp4 -vcodec mjpeg -q:v 10 -huffman 0 -r 10 -vf scale=720:-1 -an test.mjpeg`
 
-#### Vorschläge
-Manchen Sie konkrete Vorschläge zur Verbesserungen des Belegs.
+### 9. Vorschläge
+Manchen Sie konkrete Vorschläge zur Verbesserung des Belegs.
 
-
-## Lernaspekte
+## Lernaspekte des Belegs
 * Kommunikationsprotokolle
   * Internetprotokolle, RFCs
 * Programmierung

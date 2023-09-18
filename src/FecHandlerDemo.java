@@ -14,7 +14,7 @@ import java.util.logging.Logger;
    http://apidocs.jitsi.org/libjitsi/
 */
 
-public class FecHandler {
+abstract class FecHandlerDemo {
   RTPpacket rtp;
   FECpacket fec;
 
@@ -51,7 +51,7 @@ public class FecHandler {
   int nrFramesLost; // Video Frame
 
   /** Constructor for Sender */
-  public FecHandler(int size) {
+  public FecHandlerDemo(int size) {
     fecGroupSize = size;
   }
 
@@ -60,7 +60,7 @@ public class FecHandler {
    *
    * @param useFec choose of using FEC
    */
-  public FecHandler(boolean useFec) {
+  public FecHandlerDemo(boolean useFec) {
     this.useFec = useFec;
   }
 
@@ -155,29 +155,32 @@ public class FecHandler {
    * @param nr Sequence Nr.
    * @return true if possible
    */
-  public boolean checkCorrection(int nr, HashMap<Integer, RTPpacket> mediaPackets) {
-    //TASK complete this method!
-    return false;
-  }
+  abstract boolean checkCorrection(int nr, HashMap<Integer, RTPpacket> mediaPackets);
 
   /**
-   * Build a RTP packet from FEC and group
+   * Build an RTP packet from FEC and group
    *
    * @param nr Sequence Nr.
    * @return RTP packet
    */
-  public RTPpacket correctRtp(int nr, HashMap<Integer, RTPpacket> mediaPackets) {
-    //TASK complete this method!
-    return fec.getLostRtp(nr);
-  }
+  abstract RTPpacket correctRtp(int nr, HashMap<Integer, RTPpacket> mediaPackets);
 
   /**
    * It is necessary to clear all data structures
    *
    * @param nr Media Sequence Nr.
    */
-  private void clearStack(int nr) {
-    //TASK complete this method!
+  void clearStack(int nr) {
+    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    int cnr = nr - maxGroupSize;
+    if (fecNr.get(cnr) != null) {
+      int fnr = fecNr.get(cnr); // corresponding FEC packet
+      fecStack.remove(fnr);
+    }
+    logger.log(Level.FINER, "FEC: clear nr: " + cnr);
+
+    fecNr.remove(cnr);
+    fecList.remove(cnr);
   }
 
   // *************** Receiver Statistics ***********************************************************

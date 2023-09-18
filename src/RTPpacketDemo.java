@@ -1,8 +1,7 @@
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RTPpacket {
-
+abstract class RTPpacketDemo {
   /*
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -18,9 +17,7 @@ public class RTPpacket {
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    */
 
-
-  // size of the RTP header:
-  static int HEADER_SIZE = 12;
+  static int HEADER_SIZE = 12;   // size of the RTP header:
 
   // Fields that compose the RTP header
   public int Version;
@@ -33,17 +30,27 @@ public class RTPpacket {
   public int TimeStamp;
   public int Ssrc;
 
-  // Bitstream of the RTP header
-  public byte[] header;
-  // size of the RTP payload
-  public int payload_size;
-  // Bitstream of the RTP payload
-  public byte[] payload;
+  public byte[] header;      // Bitstream of the RTP header
+  public int payload_size;  // size of the RTP payload
+  public byte[] payload;    // Bitstream of the RTP payload
 
-  // --------------------------
-  // Constructor of an RTPpacket object from header fields and payload bitstream
-  // --------------------------
-  public RTPpacket(int PType, int Framenb, int Time, byte[] data, int data_length) {
+  /**
+   * Fill the header array of byte with RTP header fields
+   * header[0] =
+   * ...
+   */
+  abstract void setRtpHeader();
+
+
+  /**
+   * Constructor of an RTPpacket object from header fields and payload bitstream
+   * @param PType
+   * @param Framenb
+   * @param Time
+   * @param data
+   * @param data_length
+   */
+  public RTPpacketDemo(int PType, int Framenb, int Time, byte[] data, int data_length) {
     // fill by default header fields:
     Version = 2;
     Padding = 0;
@@ -73,30 +80,12 @@ public class RTPpacket {
     // ! Do not forget to uncomment method printheader() below, if desired !
   }
 
-
-  public void setRtpHeader() {
-    //TASK fill the header array of byte with RTP header fields
-    /*
-    header[0] =
-    header[1] =
-    header[2] =
-    header[3] =
-    header[4] =
-    header[5] =
-    header[6] =
-    header[7] =
-    header[8] =
-    header[8] =
-    header[10] =
-    header[11] =
-     */
-  }
-
-
-  // --------------------------
-  // Constructor of an RTPpacket object from the packet bistream
-  // --------------------------
-  public RTPpacket(byte[] packet, int packet_size) {
+  /**
+   * Constructor of an RTPpacket object from the packet bistream
+   * @param packet
+   * @param packet_size
+   */
+  public RTPpacketDemo(byte[] packet, int packet_size) {
     // fill default fields:
     Version = 2;
     Padding = 0;

@@ -1,13 +1,13 @@
 # Projektrahmen
 Im Praktikum werden Sie einen Client und Server für Videostreaming unter Nutzung des Real-Time-Streaming-Protokolls [RTSP](http://www.ietf.org/rfc/rfc2326.txt) implementieren. Die eigentlichen Videodaten werden mittels Real-Time-Protokoll [RTP](http://www.ietf.org/rfc/rfc3550.txt) übertragen. Ein großer Teil der Funktionalität ist bereits als Quelltext vorhanden, so das RTSP-Protokoll im Server, das RTP-Handling im Client sowie die Videoanzeige.
 Ihre Aufgabe besteht im Wesentlichen aus der Ergänzung der Quellcodes in den Punkten:
-* RTSP-Protokoll im Client vervollständigen
-* RTSP-Protokoll, Methoden DESCRIBE und OPTIONS im Server vervollständigen
+* RTSP-Protokoll vervollständigen
 * RTP-Protokoll, Header im Server setzen
-* FEC in Client, Paketkorrektur implementierne
+* FEC in Client, Paketkorrektur implementieren
 
 ## 1. Java-Klassen
 Das Projekt besteht aus mehreren Java-Klassen, die je nach Funktionsumfang für Client, Server oder auch beide Anwendungen eingesetzt werden.
+Die bereitgestellten Kassen mit der Endung <Demo> sind abstrakte Klassen, die noch ausprogrammiert werden müssen und den Klassennamen ohne <Demo> erhalten.
 
 ### Server-seitige Klassen
 * [AviMetadataParser](AviMetadataParser.java): Extrahiert Metadaten aus AVI-Dateien
