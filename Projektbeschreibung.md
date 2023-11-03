@@ -7,7 +7,7 @@ Ihre Aufgabe besteht im Wesentlichen aus der Ergänzung der Quellcodes in den Pu
 
 ## 1. Java-Klassen
 Das Projekt besteht aus mehreren Java-Klassen, die je nach Funktionsumfang für Client, Server oder auch beide Anwendungen eingesetzt werden.
-Die bereitgestellten Kassen mit der Endung <Demo> sind abstrakte Klassen, die noch ausprogrammiert werden müssen und den Klassennamen ohne <Demo> erhalten.
+Die bereitgestellten Kassen mit der Endung `Demo` sind abstrakte Klassen, die noch ausprogrammiert werden müssen und den Klassennamen ohne `Demo` erhalten.
 
 ### Server-seitige Klassen
 * [Server](src/Server.java): Funktionalität des Servers zur Antwort auf die RTSP-Clientanfragen und Streaming des Videos
@@ -86,9 +86,10 @@ S: RTSP/1.0 200 OK
  : Content-Base: rtsp://idefix/htw.mjpeg
  : Content-Type: application/sdp
  : Content-Length: 460
-  
+ :
+ : v=0 
  : m=video 0 RTP/AVP 96
-   [...]
+ : [...]
 
    
 C: SETUP rtsp://idefix/htw.mjpeg/trackID=0 RTSP/1.0
@@ -97,7 +98,8 @@ C: SETUP rtsp://idefix/htw.mjpeg/trackID=0 RTSP/1.0
 
 S: RTSP/1.0 200 OK
  : CSeq: 3
- : Session: 123456
+ : Transport: RTP/AVP;unicast;client_port=25000-250001;server_port=3333-3334
+ : Session: 123456;timeout=30000
 
  
 C: PLAY rtsp://idefix/htw.mjpeg RTSP/1.0
